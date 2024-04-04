@@ -1,8 +1,8 @@
 # celery docs:
-https://viblo.asia/p/tim-hieu-ve-celery-1VgZv4dr5Aw
-https://docs.celeryq.dev/en/v5.3.6/getting-started/first-steps-with-celery.html#first-steps
-https://awstip.com/do-background-job-using-django-celery-5aae1b3e8a3a
-https://medium.com/the-andela-way/create-a-simple-microservice-with-celery-python-flask-redis-to-send-emails-with-gmail-api-224cc74ac7b3
+https://viblo.asia/p/tim-hieu-ve-celery-1VgZv4dr5Aw <br>
+https://docs.celeryq.dev/en/v5.3.6/getting-started/first-steps-with-celery.html#first-steps <br>
+https://awstip.com/do-background-job-using-django-celery-5aae1b3e8a3a <br>
+https://medium.com/the-andela-way/create-a-simple-microservice-with-celery-python-flask-redis-to-send-emails-with-gmail-api-224cc74ac7b3 <br>
 
 
 # celery docs for flask only:
