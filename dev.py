@@ -2,34 +2,42 @@ import time
 from flask import Flask
 from celery.result import AsyncResult
 from services.test_service import add_together, multiple_together
+from flask_restx import Api, Resource, fields
 
 app = Flask(__name__)
+api = Api(app, version='1.0', title='TodoMVC API',
+    description='A simple TodoMVC API',
+)
 
-@app.route('/')
-def hello_world():
-    # call to celery task
-    result_add_together_task = add_together_task()
-    id = result_add_together_task.get('result_id')
-    print(id) # get id from the celery task
+ns = api.namespace('todos', description='TODO operations')
 
-    # check result
-    # it should return this:
-    # {'ready': False, 'successful': None, 'value': None}
-    result_dict = check_result(id)
-    print(result_dict)
-    
-    # call to another celery task
-    multiple_together_task()
 
-    time.sleep(3) # sleep for 3 seconds to see that the task is running good in background
+@ns.route('/')
+class HelloWorld(Resource):
+    def get(self):
+        # call to celery task
+        result_add_together_task = add_together_task()
+        id = result_add_together_task.get('result_id')
+        print(id) # get id from the celery task
 
-    # check result
-    # it should return this:
-    # {'ready': True, 'successful': True, 'value': 5}
-    result_dict = check_result(id)
-    print(result_dict)
+        # check result
+        # it should return this:
+        # {'ready': False, 'successful': None, 'value': None}
+        result_dict = check_result(id)
+        print(result_dict)
 
-    return 'Hello, World!'
+        # call to another celery task
+        multiple_together_task()
+
+        time.sleep(3) # sleep for 3 seconds to see that the task is running good in background
+
+        # check result
+        # it should return this:
+        # {'ready': True, 'successful': True, 'value': 5}
+        result_dict = check_result(id)
+        print(result_dict)
+
+        return 'Hello, World!'
 
 
 def add_together_task():
