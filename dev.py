@@ -21,7 +21,7 @@ def hello_world():
     # call to another celery task
     multiple_together_task()
 
-    time.sleep(3) # sleep for 3 seconds to see that the task is running good in background
+    # time.sleep(3) # sleep for 3 seconds to see that the task is running good in background
 
     # check result
     # it should return this:

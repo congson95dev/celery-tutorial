@@ -1,0 +1,42 @@
+version: '3.8'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  celery-tutorial:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: celery_tutorial
+    environment:
+      - FLASK_ENV=development
+    command: python3 -m flask run --host=0.0.0.0 --reload
+    ports:
+      - "${FLASK_RUN_PORT}:${FLASK_RUN_PORT}"
+    networks:
+      - my-network
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - my-network
+    restart: always
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: services/Dockerfile
+    image: flask_celery_worker
+    command:
+      ["/start-celeryworker", "sh", "-c"]
+    env_file:
+      - .env
+    ports:
+      - 6901:6901
+    networks:
+      - my-network
+    depends_on:
+      - redis

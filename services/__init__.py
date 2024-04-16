@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from celery import Celery, Task
 
@@ -24,8 +26,8 @@ def create_app() -> Flask:
     # redis_url = "redis://redis:6379/0"
     app.config.from_mapping(
         CELERY=dict(
-            broker_url="redis://localhost:6379",
-            result_backend="redis://localhost:6379",
+            broker_url=os.getenv("REDIS_BROKER_URL"),
+            result_backend=os.getenv("REDIS_BROKER_URL"),
             task_ignore_result=True,
             # import the tasks
             imports = ('services.test_service',)
