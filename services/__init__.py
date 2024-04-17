@@ -11,7 +11,7 @@ def celery_init_app(app: Flask) -> Celery:
             with app.app_context():
                 return self.run(*args, **kwargs)
 
-    celery_app = Celery(app.name, task_cls=FlaskTask)
+    celery_app = Celery("tasks", task_cls=FlaskTask)
     celery_app.config_from_object(app.config["CELERY"])
     celery_app.set_default()
     app.extensions["celery"] = celery_app
@@ -24,6 +24,7 @@ def create_app() -> Flask:
     # redis_url = "redis://localhost:6379"
     # url for docker redis
     # redis_url = "redis://redis:6379/0"
+    # redis_url = "redis://{redis_docker_ip}:6379/0" => to find redis_docker_ip, use `docker inspect celery-tutorial-redis-1` and check in `IPAddress` field
     app.config.from_mapping(
         CELERY=dict(
             broker_url=os.getenv("REDIS_BROKER_URL"),

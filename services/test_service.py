@@ -22,9 +22,3 @@ def add_together(self, a: int, b: int) -> int:
         logger.exception(ex)
         # retry if got exception from worker
         self.retry(countdown=3**self.request.retries)
-
-# creating task for celery
-# ignore_result=False => by default we set to skip the result, some use case will need to skip the result such as send email
-@shared_task(ignore_result=False)
-def multiple_together(a: int, b: int) -> int:
-    return a * b
