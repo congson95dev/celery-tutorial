@@ -86,3 +86,11 @@ def foo_task(self):
 - `max_retries` defines the maximum times that this task can be re-executed using the `self.retry()` method.<br>
 - Whenever we catch an exception that we do not re-raise and silence, we want to make sure that we log the error using the `logger.exception()` method which will include the full traceback.<br>
 - `self.retry()` will retry the task. The countdown kwarg defines how many seconds we should wait before we retry again. Note that we define it as an exponential value that gets increased by each retry.<br>
+
+# For branch `celery-redis-docker--clientApp-local`
+
+We are trying to create `celery` and `redis` on `docker`, and connect the `client app` from `local` to that `celery`. <br>
+It's worked, but we will need to change the following:
+- set the `docker network` as `external`.
+- change the way to call to the `celery` by using the direct IP of `redis` getted from `docker`
+- use `send_task()` instead of `delay()`
