@@ -90,6 +90,7 @@ def foo_task(self):
 # For branch `celery-redis-docker--clientApp-local`
 
 We are trying to create `celery` and `redis` on `docker`, and connect the `client app` from `local` to that `celery`. <br>
+![alt text](image-1.png)
 It's worked, but we will need to change the following:
 - set the `docker network` as `external`.
 - change the way to call to the `celery` by using the direct IP of `redis` getted from `docker`
