@@ -1,9 +1,10 @@
+import os
 from flask import Flask
 from celery import Celery
 
 app = Flask(__name__)
 
-celery_app = Celery("tasks", broker="redis://172.22.0.2:6379/0", backend="redis://172.22.0.2:6379/0")
+celery_app = Celery("tasks", broker=os.getenv("REDIS_BROKER_URL"), backend=os.getenv("REDIS_BROKER_URL"))
 
 @app.route('/test')
 def test():

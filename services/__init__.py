@@ -24,7 +24,10 @@ def create_app() -> Flask:
     # redis_url = "redis://localhost:6379"
     # url for docker redis
     # redis_url = "redis://redis:6379/0"
-    # redis_url = "redis://{redis_docker_ip}:6379/0" => to find redis_docker_ip, use `docker inspect celery-tutorial-redis-1` and check in `IPAddress` field
+    # => this will help to connect within docker environment
+    # redis_url = "redis://{redis_docker_ip}:6379/0"
+    # => this will help to connect outside of docker environment
+    # => to find redis_docker_ip, use `docker inspect celery-tutorial-redis-1` and check in `IPAddress` field
     app.config.from_mapping(
         CELERY=dict(
             broker_url=os.getenv("REDIS_BROKER_URL"),
