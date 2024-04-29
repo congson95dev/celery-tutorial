@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from celery import Celery, Task
+from celery_redis_cluster_backend.redis_cluster import RedisClusterBackend
 
 # Generate the Celery config and assign it to Flask config
 
@@ -27,10 +28,15 @@ def create_app() -> Flask:
     app.config.from_mapping(
         CELERY=dict(
             broker_url=os.getenv("REDIS_BROKER_URL"),
-            result_backend=os.getenv("REDIS_BROKER_URL"),
+            result_backend=os.getenv("CELERY_RESULT_BACKEND"),
             task_ignore_result=True,
             # import the tasks
-            imports = ('services.test_service',)
+            imports = ('services.test_service',),
+            CELERY_REDIS_CLUSTER_SETTINGS={ 'startup_nodes': [
+                {"host": "redis1", "port": "6390"},
+                {"host": "redis2", "port": "6391"},
+                {"host": "redis3", "port": "6392"}
+            ]}
         ),
     )
     app.config.from_prefixed_env()

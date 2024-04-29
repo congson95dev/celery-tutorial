@@ -19,10 +19,8 @@ services:
       - my-network
     restart: always
 
-  """
-    Create 6 redis nodes and redis cluster using those 6 nodes
-    redis 1-3 will be the master nodes, redis 4-6 will be the slave nodes (this is maybe because of redis 1-3 having exposed ports where 4-6 don't)
-  """
+  # Create 6 redis nodes and redis cluster using those 6 nodes
+  # redis 1-3 will be the master nodes, redis 4-6 will be the slave nodes (this is maybe because of redis 1-3 having exposed ports where 4-6 don't)
 
   # redis 1-3 having exposed ports
   redis1:
@@ -33,7 +31,7 @@ services:
     ports:
       - 6390:6379
     volumes:
-      - ./redis.conf:/etc/redis.conf
+      - ./redis.conf:/etc/redis.conf:ro # note: add `:ro` here to specify redis.conf is a file, not a folder
     restart: always
   
   redis2:
@@ -44,7 +42,7 @@ services:
     ports:
       - 6391:6379
     volumes:
-      - ./redis.conf:/etc/redis.conf
+      - ./redis.conf:/etc/redis.conf:ro # note: add `:ro` here to specify redis.conf is a file, not a folder
     restart: always
 
   redis3:
@@ -55,7 +53,7 @@ services:
     ports:
       - 6392:6379
     volumes:
-      - ./redis.conf:/etc/redis.conf
+      - ./redis.conf:/etc/redis.conf:ro # note: add `:ro` here to specify redis.conf is a file, not a folder
     restart: always
 
   # redis 4-6 don't having exposed ports
@@ -65,7 +63,7 @@ services:
     networks:
       - my-network
     volumes:
-      - ./redis.conf:/etc/redis.conf
+      - ./redis.conf:/etc/redis.conf:ro # note: add `:ro` here to specify redis.conf is a file, not a folder
     restart: always
 
   redis5:
@@ -74,7 +72,7 @@ services:
     networks:
       - my-network
     volumes:
-      - ./redis.conf:/etc/redis.conf
+      - ./redis.conf:/etc/redis.conf:ro # note: add `:ro` here to specify redis.conf is a file, not a folder
     restart: always
 
   redis6:
@@ -83,7 +81,7 @@ services:
     networks:
       - my-network
     volumes:
-      - ./redis.conf:/etc/redis.conf
+      - ./redis.conf:/etc/redis.conf:ro # note: add `:ro` here to specify redis.conf is a file, not a folder
     restart: always
 
   # redis cluster need at least 3 redis nodes as master to make it work

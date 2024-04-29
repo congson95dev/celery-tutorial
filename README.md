@@ -88,15 +88,41 @@ def foo_task(self):
 - `self.retry()` will retry the task. The countdown kwarg defines how many seconds we should wait before we retry again. Note that we define it as an exponential value that gets increased by each retry.<br>
 
 # Redis Cluster mode
-### What has been change:
-Change are made in `docker-compose.yml` and `.env` files
+
 ### Purpose:
 The reason why this branch exists is because we need to find the way to fix this bug:<br>
 `crossslot keys in request don't hash to the same slot aws celery` <br>
-I'm trying to setup based on this repo:<br>
+It's orcur when trying to use this techstack:
+- Celery as Worker
+- AWS ElastiCache - Redis as Message Broker
+
+I'm trying to fix it based on this package, but it doesn't work:<br>
 https://github.com/hbasria/celery-redis-cluster-backend
 
 ### Steps:
 - Create 6 redis nodes and redis cluster using those 6 nodes.<br>
 - redis 1-3 will be the master nodes, redis 4-6 will be the slave nodes (this is maybe because of redis 1-3 having `exposed ports` where 4-6 don't).<br>
-- Try to connect to the redis cluster from the celery worker.<br> (Currently, i'm connecting to the redis 1, not sure if this is the correct way to connect to the redis cluster because they say the cluster should be exit after it created by docker (which is true), and each redis nodes will share the data to each other nodes, so maybe connect to redis 1 is enough? When i connect through the redis 1, everything is still showing the same as before, nothing change, so i'm not sure if this is correct)
+- Setting up for the `celery_redis_cluster_backend` package.
+<br>
+    add:
+    ```
+    CELERY_REDIS_CLUSTER_SETTINGS = { 'startup_nodes': [
+        {"host": "localhost", "port": "6379"},
+        {"host": "localhost", "port": "6380"},
+        {"host": "localhost", "port": "6381"}
+    ]}
+    ```
+- Try to connect to the redis cluster from the celery worker.<br>
+
+### Result:
+
+Return Error:<br>
+`ResponseError('CLUSTERDOWN The cluster is down')` or `redis.exceptions.ResponseError: MOVED 192.168.80.7:6379`
+
+### What has been change:
+- `docker-compose.yml`
+- `.env`
+- folder `celery_redis_cluster_backend`
+- `services/__init__.py`
+- `redis.conf`
+- `requirements.txt`
