@@ -86,3 +86,17 @@ def foo_task(self):
 - `max_retries` defines the maximum times that this task can be re-executed using the `self.retry()` method.<br>
 - Whenever we catch an exception that we do not re-raise and silence, we want to make sure that we log the error using the `logger.exception()` method which will include the full traceback.<br>
 - `self.retry()` will retry the task. The countdown kwarg defines how many seconds we should wait before we retry again. Note that we define it as an exponential value that gets increased by each retry.<br>
+
+# Redis Cluster mode
+### What has been change:
+Change are made in `docker-compose.yml` and `.env` files
+### Purpose:
+The reason why this branch exists is because we need to find the way to fix this bug:<br>
+`crossslot keys in request don't hash to the same slot aws celery` <br>
+I'm trying to setup based on this repo:<br>
+https://github.com/hbasria/celery-redis-cluster-backend
+
+### Steps:
+- Create 6 redis nodes and redis cluster using those 6 nodes.<br>
+- redis 1-3 will be the master nodes, redis 4-6 will be the slave nodes (this is maybe because of redis 1-3 having `exposed ports` where 4-6 don't).<br>
+- Try to connect to the redis cluster from the celery worker.<br> (Currently, i'm connecting to the redis 1, not sure if this is the correct way to connect to the redis cluster because they say the cluster should be exit after it created by docker (which is true), and each redis nodes will share the data to each other nodes, so maybe connect to redis 1 is enough? When i connect through the redis 1, everything is still showing the same as before, nothing change, so i'm not sure if this is correct)

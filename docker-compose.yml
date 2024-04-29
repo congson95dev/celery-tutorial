@@ -19,11 +19,88 @@ services:
       - my-network
     restart: always
 
-  redis:
-    image: redis:7-alpine
+  """
+    Create 6 redis nodes and redis cluster using those 6 nodes
+    redis 1-3 will be the master nodes, redis 4-6 will be the slave nodes (this is maybe because of redis 1-3 having exposed ports where 4-6 don't)
+  """
+
+  # redis 1-3 having exposed ports
+  redis1:
+    image: redis:7
+    command: redis-server /etc/redis.conf
     networks:
       - my-network
+    ports:
+      - 6390:6379
+    volumes:
+      - ./redis.conf:/etc/redis.conf
     restart: always
+  
+  redis2:
+    image: redis:7
+    command: redis-server /etc/redis.conf
+    networks:
+      - my-network
+    ports:
+      - 6391:6379
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+    restart: always
+
+  redis3:
+    image: redis:7
+    command: redis-server /etc/redis.conf
+    networks:
+      - my-network
+    ports:
+      - 6392:6379
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+    restart: always
+
+  # redis 4-6 don't having exposed ports
+  redis4:
+    image: redis:7
+    command: redis-server /etc/redis.conf
+    networks:
+      - my-network
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+    restart: always
+
+  redis5:
+    image: redis:7
+    command: redis-server /etc/redis.conf
+    networks:
+      - my-network
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+    restart: always
+
+  redis6:
+    image: redis:7
+    command: redis-server /etc/redis.conf
+    networks:
+      - my-network
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+    restart: always
+
+  # redis cluster need at least 3 redis nodes as master to make it work
+  # if set "--cluster-replicas 1", and if we have 6 redis nodes => it will automatic set 3 redis nodes as master, and 3 redis nodes as slave
+  cluster-setup:
+    image: redis:7
+    networks:
+      - my-network
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
+      - redis4
+      - redis5
+      - redis6
+    restart: "no"
+    entrypoint: [ "bash", "-c", "redis-cli --cluster create redis1:6379 redis2:6379 redis3:6379 redis4:6379 redis5:6379 redis6:6379 --cluster-replicas 1 --cluster-yes"]    
 
   celery_worker:
     build:
@@ -39,4 +116,9 @@ services:
     networks:
       - my-network
     depends_on:
-      - redis
+      - redis1
+      - redis2
+      - redis3
+      - redis4
+      - redis5
+      - redis6
