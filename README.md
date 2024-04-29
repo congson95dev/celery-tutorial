@@ -103,7 +103,7 @@ https://github.com/hbasria/celery-redis-cluster-backend
 - Create 6 redis nodes and redis cluster using those 6 nodes.<br>
 - redis 1-3 will be the master nodes, redis 4-6 will be the slave nodes (this is maybe because of redis 1-3 having `exposed ports` where 4-6 don't).<br>
 - Setting up for the `celery_redis_cluster_backend` package.
-<br>
+
     add:
     ```
     CELERY_REDIS_CLUSTER_SETTINGS = { 'startup_nodes': [
