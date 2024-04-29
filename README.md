@@ -107,9 +107,9 @@ https://github.com/hbasria/celery-redis-cluster-backend
     add:
     ```
     CELERY_REDIS_CLUSTER_SETTINGS = { 'startup_nodes': [
-        {"host": "localhost", "port": "6379"},
-        {"host": "localhost", "port": "6380"},
-        {"host": "localhost", "port": "6381"}
+        {"host": "redis1", "port": "6390"},
+        {"host": "redis2", "port": "6391"},
+        {"host": "redis3", "port": "6392"}
     ]}
     ```
 - Try to connect to the redis cluster from the celery worker.<br>
