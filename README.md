@@ -9,8 +9,9 @@ https://medium.com/the-andela-way/create-a-simple-microservice-with-celery-pytho
 https://flask.palletsprojects.com/en/3.0.x/patterns/celery/
 
 # step to install:
-### 1. install redis or rabbitMQ (in this tutorial, we use redis)
-https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04
+### 1. install redis or rabbitMQ or SQS (in this tutorial, we use SQS)
+https://celery.school/amazon-sqs-celery-broker <br>
+https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/sqs.html
 
 ### 2. install environment:
 ```
@@ -35,6 +36,14 @@ now go to http://127.0.0.1:5000/<br>
 check on terminal of worker, we will see the result showing in there.
 
 # Notes:
+
+In SQS setup, we will need to setup these lib:
+```
+pip install botocore
+pip install boto3
+pip install "celery[sqs]"
+```
+
 normally, we will use `@celery.task()`, but with this repo, we are using `celery for flask`, so we will use `shared_task()` instead.<br>
 the reason is:
 ![alt text](image.png)

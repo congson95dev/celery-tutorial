@@ -1,5 +1,12 @@
+import os
+
 from flask import Flask
 from celery import Celery, Task
+
+sqs_queue_url = os.getenv("SQS_QUEUE_URL")
+aws_access_key = os.getenv("AWS_ACCESS_KEY")
+aws_secret_key = os.getenv("AWS_SECRET_KEY")
+region = os.getenv("REGION")
 
 # Generate the Celery config and assign it to Flask config
 
@@ -18,14 +25,19 @@ def celery_init_app(app: Flask) -> Celery:
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    # url for local redis
-    # redis_url = "redis://localhost:6379"
-    # url for docker redis
-    # redis_url = "redis://redis:6379/0"
     app.config.from_mapping(
         CELERY=dict(
-            broker_url="redis://localhost:6379",
-            result_backend="redis://localhost:6379",
+            broker_url=f"sqs://{aws_access_key}:{aws_secret_key}@",
+            broker_transport_options={
+                "region": region,
+                "predefined_queues": {
+                    "celery": {
+                        "url": sqs_queue_url,
+                        "access_key_id": aws_access_key,
+                        "secret_access_key": aws_secret_key,
+                    }
+                },
+            },
             task_ignore_result=True,
             # import the tasks
             imports = ('services.test_service',)
