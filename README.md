@@ -96,6 +96,8 @@ It's orcur when trying to use this techstack:
 - Celery as Worker
 - AWS ElastiCache - Redis as Message Broker
 
+We can try to disable the `Cluster mode` in `ElastiCache` to make this issue gone, but on production environment, this behavior is not recommended because `Cluster mode` keep the site **"High Availability"**. => So we won't do that.
+
 I'm trying to fix it based on this package, but it doesn't work:<br>
 https://github.com/hbasria/celery-redis-cluster-backend
 
@@ -130,3 +132,6 @@ Return Error:<br>
 ### Reference:
 https://stackoverflow.com/a/60519858/8962929 <br>
 https://stackoverflow.com/a/76585314/8962929
+
+### Notes:
+None of above work so far (02/05/2024) so i'll change to use `SQS` or `RabbitMQ` instead.
